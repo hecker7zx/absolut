@@ -1,0 +1,410 @@
+/* ============================================================
+   ABSOLUT RASPBERRI — Awwwards-Level Cinematic Styles
+   ============================================================ */
+
+/* --- Design Tokens --- */
+:root {
+    --bg-primary: #020202;
+    --raspberry: #c2185b;
+    --raspberry-light: #e91e63;
+    --raspberry-deep: #880e4f;
+    --raspberry-glow: rgba(194, 24, 91, 0.25);
+    --gold: #d4af37;
+    --white: #ffffff;
+    --white-soft: rgba(255, 255, 255, 0.87);
+    --white-muted: rgba(255, 255, 255, 0.45);
+    --white-ghost: rgba(255, 255, 255, 0.1);
+    --frost: rgba(255, 255, 255, 0.06);
+    --font-display: 'Playfair Display', Georgia, 'Times New Roman', serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+/* --- Reset --- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    background: var(--bg-primary);
+    color: var(--white);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    line-height: 1.6;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ============================================================
+   Custom Cursor
+   ============================================================ */
+html.has-cursor, html.has-cursor * { cursor: none !important; }
+
+.cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    mix-blend-mode: difference;
+    transition: opacity 0.35s var(--ease-smooth);
+    will-change: left, top;
+}
+
+.cursor-ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    will-change: width, height, transform, border-color;
+    backface-visibility: hidden;
+}
+
+.cursor-dot {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 5px;
+    background: var(--white);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    will-change: transform, opacity;
+}
+
+/* ============================================================
+   Canvas
+   ============================================================ */
+#bottle-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* ============================================================
+   Vignette
+   ============================================================ */
+.vignette {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 35%, rgba(0, 0, 0, 0.55) 100%);
+    pointer-events: none;
+    z-index: 3;
+}
+
+/* ============================================================
+   Loading Screen
+   ============================================================ */
+.loader {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: opacity 1.2s var(--ease-smooth), visibility 0s 1.2s;
+}
+
+.loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+.loader-inner { text-align: center; }
+
+.loader-logo {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    letter-spacing: 0.35em;
+    color: var(--white);
+    margin-bottom: 0.4rem;
+    animation: loaderPulse 2s ease-in-out infinite;
+}
+
+.loader-subtitle {
+    font-family: var(--font-display);
+    font-size: clamp(0.8rem, 2vw, 1.2rem);
+    font-style: italic;
+    letter-spacing: 0.5em;
+    color: var(--raspberry-light);
+    margin-bottom: 2.5rem;
+}
+
+.loader-bar {
+    width: clamp(140px, 30vw, 220px);
+    height: 2px;
+    background: var(--white-ghost);
+    margin: 0 auto;
+    border-radius: 1px;
+    overflow: hidden;
+}
+
+.loader-progress {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--raspberry), var(--raspberry-light));
+    border-radius: 1px;
+    transition: width 0.3s ease-out;
+}
+
+@keyframes loaderPulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+/* ============================================================
+   Navigation
+   ============================================================ */
+.nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.8rem 3rem;
+    z-index: 100;
+    mix-blend-mode: difference;
+}
+
+.nav-logo {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 900;
+    letter-spacing: 0.4em;
+    color: var(--white);
+    user-select: none;
+    position: relative;
+    display: inline-block;
+    will-change: transform;
+}
+
+/* Hover glow */
+.nav-logo::after {
+    content: '';
+    position: absolute;
+    inset: -14px -18px;
+    background: radial-gradient(ellipse, var(--raspberry-glow), transparent 70%);
+    opacity: 0;
+    transition: opacity 0.45s var(--ease-smooth);
+    pointer-events: none;
+    border-radius: 50%;
+}
+
+.nav-logo:hover::after { opacity: 1; }
+
+/* ============================================================
+   Scroll Prompt
+   ============================================================ */
+.scroll-prompt {
+    position: fixed;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.7rem;
+    z-index: 10;
+}
+
+.scroll-prompt-text {
+    font-family: var(--font-body);
+    font-size: 0.6rem;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--white-muted);
+}
+
+.scroll-prompt-line {
+    width: 1px;
+    height: 36px;
+    position: relative;
+    overflow: hidden;
+}
+
+.scroll-prompt-line::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent, var(--raspberry-light), transparent);
+    animation: lineSlide 2s ease-in-out infinite;
+}
+
+@keyframes lineSlide {
+    0%   { top: -100%; }
+    100% { top: 100%; }
+}
+
+/* ============================================================
+   Scene Text — Line-Reveal Typography
+   ============================================================ */
+.scene-text {
+    position: fixed;
+    bottom: 12%;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+    will-change: opacity;
+}
+
+.text-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.scene-number {
+    font-family: var(--font-body);
+    font-size: 0.6rem;
+    font-weight: 400;
+    letter-spacing: 0.5em;
+    color: var(--raspberry-light);
+    opacity: 0;
+    will-change: opacity, transform;
+}
+
+.scene-number::before,
+.scene-number::after {
+    content: '——';
+    margin: 0 0.8em;
+    opacity: 0.3;
+    letter-spacing: 0;
+}
+
+/* Line-reveal clip container */
+.line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.06em; /* protect descenders */
+}
+
+.line-inner {
+    display: block;
+    transform: translateY(110%);
+    will-change: transform;
+}
+
+.scene-heading {
+    font-family: var(--font-display);
+    font-size: clamp(2.4rem, 6vw, 5rem);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    line-height: 1.18;
+    color: var(--white);
+    text-shadow:
+        0 0 40px rgba(0, 0, 0, 0.9),
+        0 0 80px rgba(0, 0, 0, 0.5);
+    white-space: nowrap;
+}
+
+/* Scene divider line */
+.scene-divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--raspberry-light), transparent);
+    margin-top: 0.6rem;
+    transform: scaleX(0);
+    will-change: transform;
+}
+
+/* Final scene — centered, larger */
+.scene-text-final {
+    bottom: 50%;
+    transform: translate(-50%, 50%);
+}
+
+.scene-heading-final {
+    font-size: clamp(3.2rem, 9vw, 7.5rem) !important;
+    letter-spacing: 0.08em !important;
+    text-shadow:
+        0 0 60px var(--raspberry-glow),
+        0 0 120px rgba(194, 24, 91, 0.15) !important;
+}
+
+.scene-heading-final em {
+    font-style: italic;
+    color: var(--raspberry-light);
+}
+
+/* ============================================================
+   Progress Bar
+   ============================================================ */
+.progress-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.04);
+    z-index: 50;
+}
+
+.progress-fill {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, var(--raspberry-deep), var(--raspberry), var(--raspberry-light));
+    transform: scaleX(0);
+    transform-origin: left center;
+    will-change: transform;
+}
+
+/* ============================================================
+   Scroll Spacer
+   ============================================================ */
+#scroll-spacer {
+    height: 600vh;
+    pointer-events: none;
+    position: relative;
+    z-index: 0;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 1024px) {
+    .scene-heading { font-size: clamp(2rem, 5vw, 3.5rem); }
+    .scene-heading-final { font-size: clamp(2.5rem, 7vw, 5rem) !important; }
+}
+
+@media (max-width: 768px) {
+    .nav { padding: 1.2rem 1.5rem; }
+    .scene-text { bottom: 10%; width: 90vw; }
+    .scene-heading { font-size: clamp(1.6rem, 7vw, 2.8rem); white-space: normal; }
+    .scene-heading-final { font-size: clamp(2rem, 10vw, 4rem) !important; }
+    .vignette { background: radial-gradient(ellipse at center, transparent 20%, rgba(0,0,0,0.6) 100%); }
+}
+
+@media (max-width: 480px) {
+    .scene-heading { font-size: clamp(1.3rem, 8vw, 2rem); }
+    .scene-heading-final { font-size: clamp(1.8rem, 12vw, 3rem) !important; }
+    .scroll-prompt { bottom: 1.5rem; }
+}
+
+/* Touch devices — no custom cursor */
+@media (hover: none), (pointer: coarse) {
+    .cursor { display: none !important; }
+    * { cursor: auto !important; }
+}
