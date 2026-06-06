@@ -10,20 +10,57 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  */
 export function createBottle(scene) {
     const bottleGroup = new THREE.Group();
-    const loader = new GLTFLoader();
-    // Load the GLB bottle model (ensure the path is correct relative to the page)
-    loader.load('assets/bottle.glb', (gltf) => {
-        const model = gltf.scene;
-        // Optional: scale the model to fit the scene and dominate view
-        const scaleFactor = 2.5; // adjust as needed for ~75% viewport coverage
-        model.scale.set(scaleFactor, scaleFactor, scaleFactor);
-        // Center the model
-        model.position.set(0, 0, 0);
-        bottleGroup.add(model);
-    }, undefined, (error) => {
-        console.error('Failed to load bottle GLB:', error);
-    });
-    scene.add(bottleGroup);
+        // -------------------------------------------------------
+        //  Build glass body using LatheGeometry for photorealistic PBR glass
+        // -------------------------------------------------------
+        const glassMaterial = new THREE.MeshPhysicalMaterial({
+            transmission: 1.0,          // full glass
+            thickness: 0.003,           // ~3mm glass thickness
+            ior: 1.52,
+            roughness: 0.08,
+            metalness: 0.0,
+            clearcoat: 1.0,
+            clearcoatRoughness: 0.04,
+            envMapIntensity: 1.0,
+            transparent: true,
+        });
+        const glassGeometry = new THREE.LatheGeometry(createBottleProfile(), 128);
+        const glassMesh = new THREE.Mesh(glassGeometry, glassMaterial);
+        glassMesh.rotation.x = Math.PI; // flip to match label orientation
+        bottleGroup.add(glassMesh);
+
+        // -------------------------------------------------------
+        //  Liquid (raspberry vodka) – slightly inset geometry
+        // -------------------------------------------------------
+        const liquidMaterial = new THREE.MeshPhysicalMaterial({
+            transmission: 0.6,
+            thickness: 0.1,
+            ior: 1.33,
+            color: new THREE.Color(0xc2185b), // raspberry hue
+            roughness: 0.2,
+            metalness: 0.0,
+            envMapIntensity: 1.0,
+            transparent: true,
+        });
+        const liquidGeometry = new THREE.LatheGeometry(createLiquidProfile(), 128);
+        const liquidMesh = new THREE.Mesh(liquidGeometry, liquidMaterial);
+        liquidMesh.rotation.x = Math.PI;
+        bottleGroup.add(liquidMesh);
+
+        // -------------------------------------------------------
+        //  Add cap and label (existing functions)
+        // -------------------------------------------------------
+        const cap = createCap();
+        bottleGroup.add(cap);
+        const label = createLabel();
+        bottleGroup.add(label);
+
+        // -------------------------------------------------------
+        //  Condensation droplets (instanced mesh)
+        // -------------------------------------------------------
+        const condensation = createCondensation();
+        bottleGroup.add(condensation);
+scene.add(bottleGroup);
     return bottleGroup;
 }
 

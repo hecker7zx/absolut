@@ -1,0 +1,26 @@
+{
+  "name": "rasp-vodka-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hecker7zx/absolut.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/hecker7zx/absolut/issues"
+  },
+  "homepage": "https://github.com/hecker7zx/absolut#readme",
+  "dependencies": {
+    "gsap": "^3.15.0",
+    "lenis": "^1.3.23",
+    "three": "^0.169.0"
+  }
+}
